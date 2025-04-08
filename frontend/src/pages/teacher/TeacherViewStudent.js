@@ -9,27 +9,27 @@ import CustomPieChart from '../../components/CustomPieChart'
 import { PurpleButton } from '../../components/buttonStyles';
 import { StyledTableCell, StyledTableRow } from '../../components/styles';
 
-const TeacherViewEmployee = () => {
+const TeacherViewStudent = () => {
 
     const navigate = useNavigate()
     const params = useParams()
     const dispatch = useDispatch();
     const { currentUser, userDetails, response, loading, error } = useSelector((state) => state.user);
 
-    const address = "employee"
-    const employeeID = params.id
+    const address = "Student"
+    const studentID = params.id
     const teachSubject = currentUser.teachSubject?.subName
     const teachSubjectID = currentUser.teachSubject?._id
 
     useEffect(() => {
-        dispatch(getUserDetails(employeeID, address));
-    }, [dispatch, employeeID]);
+        dispatch(getUserDetails(studentID, address));
+    }, [dispatch, studentID]);
 
     if (response) { console.log(response) }
     else if (error) { console.log(error) }
 
     const [sclassName, setSclassName] = useState('');
-    const [employeeSchool, setemployeeSchool] = useState('');
+    const [studentSchool, setStudentSchool] = useState('');
     const [subjectMarks, setSubjectMarks] = useState('');
     const [subjectAttendance, setSubjectAttendance] = useState([]);
 
@@ -45,7 +45,7 @@ const TeacherViewEmployee = () => {
     useEffect(() => {
         if (userDetails) {
             setSclassName(userDetails.sclassName || '');
-            setemployeeSchool(userDetails.school || '');
+            setStudentSchool(userDetails.school || '');
             setSubjectMarks(userDetails.examResult || '');
             setSubjectAttendance(userDetails.attendance || []);
         }
@@ -74,7 +74,7 @@ const TeacherViewEmployee = () => {
                     <br />
                     Class: {sclassName.sclassName}
                     <br />
-                    School: {employeeSchool.schoolName}
+                    School: {studentSchool.schoolName}
                     <br /><br />
 
                     <h3>Attendance:</h3>
@@ -162,7 +162,7 @@ const TeacherViewEmployee = () => {
                         variant="contained"
                         onClick={() =>
                             navigate(
-                                `/Teacher/class/employee/attendance/${employeeID}/${teachSubjectID}`
+                                `/Teacher/class/student/attendance/${studentID}/${teachSubjectID}`
                             )
                         }
                     >
@@ -202,7 +202,7 @@ const TeacherViewEmployee = () => {
                     <PurpleButton variant="contained"
                         onClick={() =>
                             navigate(
-                                `/Teacher/class/employee/marks/${employeeID}/${teachSubjectID}`
+                                `/Teacher/class/student/marks/${studentID}/${teachSubjectID}`
                             )}>
                         Add Marks
                     </PurpleButton>
@@ -213,4 +213,4 @@ const TeacherViewEmployee = () => {
     )
 }
 
-export default TeacherViewEmployee
+export default TeacherViewStudent

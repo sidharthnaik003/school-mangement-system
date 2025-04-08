@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom'
-import { getClassDetails, getClassemployees, getSubjectList } from "../../../redux/sclassRelated/sclassHandle";
+import { getClassDetails, getClassStudents, getSubjectList } from "../../../redux/sclassRelated/sclassHandle";
 import { deleteUser } from '../../../redux/userRelated/userHandle';
 import {
     Box, Container, Typography, Tab, IconButton
@@ -23,14 +23,14 @@ const ClassDetails = () => {
     const params = useParams()
     const navigate = useNavigate()
     const dispatch = useDispatch();
-    const { subjectsList, sclassemployees, sclassDetails, loading, error, response, getresponse } = useSelector((state) => state.sclass);
+    const { subjectsList, sclassStudents, sclassDetails, loading, error, response, getresponse } = useSelector((state) => state.sclass);
 
     const classID = params.id
 
     useEffect(() => {
         dispatch(getClassDetails(classID, "Sclass"));
         dispatch(getSubjectList(classID, "ClassSubjects"))
-        dispatch(getClassemployees(classID));
+        dispatch(getClassStudents(classID));
     }, [dispatch, classID])
 
     if (error) {
@@ -53,7 +53,7 @@ const ClassDetails = () => {
         setShowPopup(true)
         // dispatch(deleteUser(deleteID, address))
         //     .then(() => {
-        //         dispatch(getClassemployees(classID));
+        //         dispatch(getClassStudents(classID));
         //         dispatch(resetSubjects())
         //         dispatch(getSubjectList(classID, "ClassSubjects"))
         //     })
@@ -127,35 +127,35 @@ const ClassDetails = () => {
         )
     }
 
-    const employeeColumns = [
+    const studentColumns = [
         { id: 'name', label: 'Name', minWidth: 170 },
         { id: 'rollNum', label: 'Roll Number', minWidth: 100 },
     ]
 
-    const employeeRows = sclassemployees.map((employee) => {
+    const studentRows = sclassStudents.map((student) => {
         return {
-            name: employee.name,
-            rollNum: employee.rollNum,
-            id: employee._id,
+            name: student.name,
+            rollNum: student.rollNum,
+            id: student._id,
         };
     })
 
-    const employeesButtonHaver = ({ row }) => {
+    const StudentsButtonHaver = ({ row }) => {
         return (
             <>
-                <IconButton onClick={() => deleteHandler(row.id, "employee")}>
+                <IconButton onClick={() => deleteHandler(row.id, "Student")}>
                     <PersonRemoveIcon color="error" />
                 </IconButton>
                 <BlueButton
                     variant="contained"
-                    onClick={() => navigate("/Admin/employees/employee/" + row.id)}
+                    onClick={() => navigate("/Admin/students/student/" + row.id)}
                 >
                     View
                 </BlueButton>
                 <PurpleButton
                     variant="contained"
                     onClick={() =>
-                        navigate("/Admin/employees/employee/attendance/" + row.id)
+                        navigate("/Admin/students/student/attendance/" + row.id)
                     }
                 >
                     Attendance
@@ -164,18 +164,18 @@ const ClassDetails = () => {
         );
     };
 
-    const employeeActions = [
+    const studentActions = [
         {
-            icon: <PersonAddAlt1Icon color="primary" />, name: 'Add New employee',
-            action: () => navigate("/Admin/class/addemployees/" + classID)
+            icon: <PersonAddAlt1Icon color="primary" />, name: 'Add New Student',
+            action: () => navigate("/Admin/class/addstudents/" + classID)
         },
         {
-            icon: <PersonRemoveIcon color="error" />, name: 'Delete All employees',
-            action: () => deleteHandler(classID, "employeesClass")
+            icon: <PersonRemoveIcon color="error" />, name: 'Delete All Students',
+            action: () => deleteHandler(classID, "StudentsClass")
         },
     ];
 
-    const ClassemployeesSection = () => {
+    const ClassStudentsSection = () => {
         return (
             <>
                 {getresponse ? (
@@ -183,20 +183,20 @@ const ClassDetails = () => {
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
                             <GreenButton
                                 variant="contained"
-                                onClick={() => navigate("/Admin/class/addemployees/" + classID)}
+                                onClick={() => navigate("/Admin/class/addstudents/" + classID)}
                             >
-                                Add employees
+                                Add Students
                             </GreenButton>
                         </Box>
                     </>
                 ) : (
                     <>
                         <Typography variant="h5" gutterBottom>
-                            employees List:
+                            Students List:
                         </Typography>
 
-                        <TableTemplate buttonHaver={employeesButtonHaver} columns={employeeColumns} rows={employeeRows} />
-                        <SpeedDialTemplate actions={employeeActions} />
+                        <TableTemplate buttonHaver={StudentsButtonHaver} columns={studentColumns} rows={studentRows} />
+                        <SpeedDialTemplate actions={studentActions} />
                     </>
                 )}
             </>
@@ -213,7 +213,7 @@ const ClassDetails = () => {
 
     const ClassDetailsSection = () => {
         const numberOfSubjects = subjectsList.length;
-        const numberOfemployees = sclassemployees.length;
+        const numberOfStudents = sclassStudents.length;
 
         return (
             <>
@@ -227,14 +227,14 @@ const ClassDetails = () => {
                     Number of Subjects: {numberOfSubjects}
                 </Typography>
                 <Typography variant="h6" gutterBottom>
-                    Number of employees: {numberOfemployees}
+                    Number of Students: {numberOfStudents}
                 </Typography>
                 {getresponse &&
                     <GreenButton
                         variant="contained"
-                        onClick={() => navigate("/Admin/class/addemployees/" + classID)}
+                        onClick={() => navigate("/Admin/class/addstudents/" + classID)}
                     >
-                        Add employees
+                        Add Students
                     </GreenButton>
                 }
                 {response &&
@@ -261,7 +261,7 @@ const ClassDetails = () => {
                                 <TabList onChange={handleChange} sx={{ position: 'fixed', width: '100%', bgcolor: 'background.paper', zIndex: 1 }}>
                                     <Tab label="Details" value="1" />
                                     <Tab label="Subjects" value="2" />
-                                    <Tab label="employees" value="3" />
+                                    <Tab label="Students" value="3" />
                                     <Tab label="Teachers" value="4" />
                                 </TabList>
                             </Box>
@@ -273,7 +273,7 @@ const ClassDetails = () => {
                                     <ClassSubjectsSection />
                                 </TabPanel>
                                 <TabPanel value="3">
-                                    <ClassemployeesSection />
+                                    <ClassStudentsSection />
                                 </TabPanel>
                                 <TabPanel value="4">
                                     <ClassTeachersSection />

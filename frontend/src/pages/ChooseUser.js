@@ -38,16 +38,16 @@ const ChooseUser = ({ visitor }) => {
       }
     }
 
-    else if (user === "employee") {
+    else if (user === "Student") {
       if (visitor === "guest") {
         const rollNum = "1"
-        const employeeName = "Dipesh Awasthi"
-        const fields = { rollNum, employeeName, password }
+        const studentName = "Dipesh Awasthi"
+        const fields = { rollNum, studentName, password }
         setLoader(true)
         dispatch(loginUser(fields, user))
       }
       else {
-        navigate('/employeelogin');
+        navigate('/Studentlogin');
       }
     }
 
@@ -69,8 +69,8 @@ const ChooseUser = ({ visitor }) => {
       if (currentRole === 'Admin') {
         navigate('/Admin/dashboard');
       }
-      else if (currentRole === 'employee') {
-        navigate('/employee/dashboard');
+      else if (currentRole === 'Student') {
+        navigate('/Student/dashboard');
       } else if (currentRole === 'Teacher') {
         navigate('/Teacher/dashboard');
       }
@@ -101,14 +101,14 @@ const ChooseUser = ({ visitor }) => {
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <StyledPaper elevation={3}>
-              <div onClick={() => navigateHandler("employee")}>
+              <div onClick={() => navigateHandler("Student")}>
                 <Box mb={2}>
                   <School fontSize="large" />
                 </Box>
                 <StyledTypography>
-                  employee
+                  Student
                 </StyledTypography>
-                Login as a employee to explore course materials and assignments.
+                Login as a student to explore course materials and assignments.
               </div>
             </StyledPaper>
           </Grid>
@@ -121,7 +121,7 @@ const ChooseUser = ({ visitor }) => {
                 <StyledTypography>
                   Teacher
                 </StyledTypography>
-                Login as a teacher to create courses, assignments, and track employee progress.
+                Login as a teacher to create courses, assignments, and track student progress.
               </div>
             </StyledPaper>
           </Grid>

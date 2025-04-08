@@ -2,11 +2,11 @@ import { Container, Grid, Paper } from '@mui/material'
 import SeeNotice from '../../components/SeeNotice';
 import CountUp from 'react-countup';
 import styled from 'styled-components';
-import employees from "../../assets/img1.png";
+import Students from "../../assets/img1.png";
 import Lessons from "../../assets/subjects.svg";
 import Tests from "../../assets/assignment.svg";
 import Time from "../../assets/time.svg";
-import { getClassemployees, getSubjectDetails } from '../../redux/sclassRelated/sclassHandle';
+import { getClassStudents, getSubjectDetails } from '../../redux/sclassRelated/sclassHandle';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 
@@ -14,17 +14,17 @@ const TeacherHomePage = () => {
     const dispatch = useDispatch();
 
     const { currentUser } = useSelector((state) => state.user);
-    const { subjectDetails, sclassemployees } = useSelector((state) => state.sclass);
+    const { subjectDetails, sclassStudents } = useSelector((state) => state.sclass);
 
     const classID = currentUser.teachSclass?._id
     const subjectID = currentUser.teachSubject?._id
 
     useEffect(() => {
         dispatch(getSubjectDetails(subjectID, "Subject"));
-        dispatch(getClassemployees(classID));
+        dispatch(getClassStudents(classID));
     }, [dispatch, subjectID, classID]);
 
-    const numberOfemployees = sclassemployees && sclassemployees.length;
+    const numberOfStudents = sclassStudents && sclassStudents.length;
     const numberOfSessions = subjectDetails && subjectDetails.sessions
 
     return (
@@ -33,11 +33,11 @@ const TeacherHomePage = () => {
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={3} lg={3}>
                         <StyledPaper>
-                            <img src={employees} alt="employees" />
+                            <img src={Students} alt="Students" />
                             <Title>
-                                Class employees
+                                Class Students
                             </Title>
-                            <Data start={0} end={numberOfemployees} duration={2.5} />
+                            <Data start={0} end={numberOfStudents} duration={2.5} />
                         </StyledPaper>
                     </Grid>
                     <Grid item xs={12} md={3} lg={3}>

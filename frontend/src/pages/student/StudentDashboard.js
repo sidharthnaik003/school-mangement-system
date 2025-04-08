@@ -10,18 +10,18 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import EmployeeSideBar from './EmployeeSideBar';
+import StudentSideBar from './StudentSideBar';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import EmployeeHomePage from './EmployeeHomePage';
-import EmployeeProfile from './EmployeeProfile';
-import EmployeeSubjects from './EmployeeSubjects';
-import ViewEmpAttendance from './ViewEmpAttendance';
-import EmployeeComplain from './EmployeeComplain';
+import StudentHomePage from './StudentHomePage';
+import StudentProfile from './StudentProfile';
+import StudentSubjects from './StudentSubjects';
+import ViewStdAttendance from './ViewStdAttendance';
+import StudentComplain from './StudentComplain';
 import Logout from '../Logout'
 import AccountMenu from '../../components/AccountMenu';
 import { AppBar, Drawer } from '../../components/styles';
 
-const EmployeeDashboard = () => {
+const StudentDashboard = () => {
     const [open, setOpen] = useState(true);
     const toggleDrawer = () => {
         setOpen(!open);
@@ -52,7 +52,7 @@ const EmployeeDashboard = () => {
                             noWrap
                             sx={{ flexGrow: 1 }}
                         >
-                            employee Dashboard
+                            Student Dashboard
                         </Typography>
                         <AccountMenu />
                     </Toolbar>
@@ -65,20 +65,20 @@ const EmployeeDashboard = () => {
                     </Toolbar>
                     <Divider />
                     <List component="nav">
-                        <EmployeeSideBar />
+                        <StudentSideBar />
                     </List>
                 </Drawer>
                 <Box component="main" sx={styles.boxStyled}>
                     <Toolbar />
                     <Routes>
-                        <Route path="/" element={<EmployeeHomePage />} />
+                        <Route path="/" element={<StudentHomePage />} />
                         <Route path='*' element={<Navigate to="/" />} />
-                        <Route path="/employee/dashboard" element={<EmployeeHomePage />} />
-                        <Route path="/employee/profile" element={<EmployeeProfile />} />
+                        <Route path="/Student/dashboard" element={<StudentHomePage />} />
+                        <Route path="/Student/profile" element={<StudentProfile />} />
 
-                        <Route path="/employee/subjects" element={<EmployeeSubjects />} />
-                        <Route path="/employee/attendance" element={<ViewEmpAttendance />} />
-                        <Route path="/employee/complain" element={<EmployeeComplain />} />
+                        <Route path="/Student/subjects" element={<StudentSubjects />} />
+                        <Route path="/Student/attendance" element={<ViewStdAttendance />} />
+                        <Route path="/Student/complain" element={<StudentComplain />} />
 
                         <Route path="/logout" element={<Logout />} />
                     </Routes>
@@ -88,7 +88,7 @@ const EmployeeDashboard = () => {
     );
 }
 
-export default EmployeeDashboard
+export default StudentDashboard
 
 const styles = {
     boxStyled: {

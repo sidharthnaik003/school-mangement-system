@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import { getAllEmployees } from '../../../redux/employeeRelated/employeeHandle';
+import { getAllStudents } from '../../../redux/studentRelated/studentHandle';
 import { deleteUser } from '../../../redux/userRelated/userHandle';
 import {
     Paper, Box, IconButton
@@ -24,15 +24,15 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Popup from '../../../components/Popup';
 
-const ShowEmployees = () => {
+const ShowStudents = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch();
-    const { employeesList, loading, error, response } = useSelector((state) => state.employee);
+    const { studentsList, loading, error, response } = useSelector((state) => state.student);
     const { currentUser } = useSelector(state => state.user)
 
     useEffect(() => {
-        dispatch(getAllEmployees(currentUser._id));
+        dispatch(getAllStudents(currentUser._id));
     }, [currentUser._id, dispatch]);
 
     if (error) {
@@ -50,26 +50,26 @@ const ShowEmployees = () => {
 
         // dispatch(deleteUser(deleteID, address))
         //     .then(() => {
-        //         dispatch(getAllEmployees(currentUser._id));
+        //         dispatch(getAllStudents(currentUser._id));
         //     })
     }
 
-    const employeeColumns = [
+    const studentColumns = [
         { id: 'name', label: 'Name', minWidth: 170 },
         { id: 'rollNum', label: 'Roll Number', minWidth: 100 },
         { id: 'sclassName', label: 'Class', minWidth: 170 },
     ]
 
-    const employeeRows = employeesList && employeesList.length > 0 && employeesList.map((employee) => {
+    const studentRows = studentsList && studentsList.length > 0 && studentsList.map((student) => {
         return {
-            name: employee.name,
-            rollNum: employee.rollNum,
-            sclassName: employee.sclassName.sclassName,
-            id: employee._id,
+            name: student.name,
+            rollNum: student.rollNum,
+            sclassName: student.sclassName.sclassName,
+            id: student._id,
         };
     })
 
-    const EmployeeButtonHaver = ({ row }) => {
+    const StudentButtonHaver = ({ row }) => {
         const options = ['Take Attendance', 'Provide Marks'];
 
         const [open, setOpen] = React.useState(false);
@@ -86,10 +86,10 @@ const ShowEmployees = () => {
         };
 
         const handleAttendance = () => {
-            navigate("/Admin/employees/employee/attendance/" + row.id)
+            navigate("/Admin/students/student/attendance/" + row.id)
         }
         const handleMarks = () => {
-            navigate("/Admin/employees/employee/marks/" + row.id)
+            navigate("/Admin/students/student/marks/" + row.id)
         };
 
         const handleMenuItemClick = (event, index) => {
@@ -110,11 +110,11 @@ const ShowEmployees = () => {
         };
         return (
             <>
-                <IconButton onClick={() => deleteHandler(row.id, "employee")}>
+                <IconButton onClick={() => deleteHandler(row.id, "Student")}>
                     <PersonRemoveIcon color="error" />
                 </IconButton>
                 <BlueButton variant="contained"
-                    onClick={() => navigate("/Admin/employees/employee/" + row.id)}>
+                    onClick={() => navigate("/Admin/students/student/" + row.id)}>
                     View
                 </BlueButton>
                 <React.Fragment>
@@ -175,12 +175,12 @@ const ShowEmployees = () => {
 
     const actions = [
         {
-            icon: <PersonAddAlt1Icon color="primary" />, name: 'Add New employee',
-            action: () => navigate("/Admin/addemployees")
+            icon: <PersonAddAlt1Icon color="primary" />, name: 'Add New Student',
+            action: () => navigate("/Admin/addstudents")
         },
         {
-            icon: <PersonRemoveIcon color="error" />, name: 'Delete All employees',
-            action: () => deleteHandler(currentUser._id, "employees")
+            icon: <PersonRemoveIcon color="error" />, name: 'Delete All Students',
+            action: () => deleteHandler(currentUser._id, "Students")
         },
     ];
 
@@ -192,14 +192,14 @@ const ShowEmployees = () => {
                 <>
                     {response ?
                         <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
-                            <GreenButton variant="contained" onClick={() => navigate("/Admin/addemployees")}>
-                                Add employees
+                            <GreenButton variant="contained" onClick={() => navigate("/Admin/addstudents")}>
+                                Add Students
                             </GreenButton>
                         </Box>
                         :
                         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                            {Array.isArray(employeesList) && employeesList.length > 0 &&
-                                <TableTemplate buttonHaver={EmployeeButtonHaver} columns={employeeColumns} rows={employeeRows} />
+                            {Array.isArray(studentsList) && studentsList.length > 0 &&
+                                <TableTemplate buttonHaver={StudentButtonHaver} columns={studentColumns} rows={studentRows} />
                             }
                             <SpeedDialTemplate actions={actions} />
                         </Paper>
@@ -211,4 +211,4 @@ const ShowEmployees = () => {
     );
 };
 
-export default ShowEmployees;
+export default ShowStudents;

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const complainSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'employee',
+        ref: 'student',
         required: true
     },
     date: {

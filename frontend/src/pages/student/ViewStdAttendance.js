@@ -13,7 +13,7 @@ import TableChartIcon from '@mui/icons-material/TableChart';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import { StyledTableCell, StyledTableRow } from '../../components/styles';
 
-const ViewEmpAttendance = () => {
+const ViewStdAttendance = () => {
     const dispatch = useDispatch();
 
     const [openStates, setOpenStates] = useState({});
@@ -28,7 +28,7 @@ const ViewEmpAttendance = () => {
     const { userDetails, currentUser, loading, response, error } = useSelector((state) => state.user);
 
     useEffect(() => {
-        dispatch(getUserDetails(currentUser._id, "employee"));
+        dispatch(getUserDetails(currentUser._id, "Student"));
     }, [dispatch, currentUser._id]);
 
     if (response) { console.log(response) }
@@ -188,4 +188,4 @@ const ViewEmpAttendance = () => {
     )
 }
 
-export default ViewEmpAttendance
+export default ViewStdAttendance

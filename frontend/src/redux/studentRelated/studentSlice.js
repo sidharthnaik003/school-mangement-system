@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    employeesList: [],
+    studentsList: [],
     loading: false,
     error: null,
     response: null,
     statestatus: "idle",
 };
 
-const employeeSlice = createSlice({
-    name: 'employee',
+const studentSlice = createSlice({
+    name: 'student',
     initialState,
     reducers: {
         getRequest: (state) => {
@@ -22,7 +22,7 @@ const employeeSlice = createSlice({
             state.statestatus = "added";
         },
         getSuccess: (state, action) => {
-            state.employeesList = action.payload;
+            state.studentsList = action.payload;
             state.loading = false;
             state.error = null;
             state.response = null;
@@ -36,7 +36,7 @@ const employeeSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         },
-        underemployeeControl: (state) => {
+        underStudentControl: (state) => {
             state.loading = false;
             state.response = null;
             state.error = null;
@@ -50,8 +50,8 @@ export const {
     getSuccess,
     getFailed,
     getError,
-    underemployeeControl,
+    underStudentControl,
     stuffDone,
-} = employeeSlice.actions;
+} = studentSlice.actions;
 
-export const employeeReducer = employeeSlice.reducer;
+export const studentReducer = studentSlice.reducer;

@@ -1,29 +1,29 @@
 const bcrypt = require('bcryptjs');
-const Employee = require('../models/employeeSchema.js');
+const Student = require('../models/studentSchema.js');
 const Subject = require('../models/subjectSchema.js');
 
-const employeeRegister = async (req, res) => {
+const studentRegister = async (req, res) => {
     try {
         const salt = await bcrypt.genSalt(10);
         const hashedPass = await bcrypt.hash(req.body.password, salt);
 
-        const existingEmployee = await Employee.findOne({
+        const existingStudent = await Student.findOne({
             rollNum: req.body.rollNum,
             school: req.body.adminID,
             sclassName: req.body.sclassName,
         });
 
-        if (existingEmployee) {
+        if (existingStudent) {
             res.send({ message: 'Roll Number already exists' });
         }
         else {
-            const employee = new Employee({
+            const student = new Student({
                 ...req.body,
                 school: req.body.adminID,
                 password: hashedPass
             });
 
-            let result = await employee.save();
+            let result = await student.save();
 
             result.password = undefined;
             res.send(result);
@@ -33,78 +33,78 @@ const employeeRegister = async (req, res) => {
     }
 };
 
-const employeeLogIn = async (req, res) => {
+const studentLogIn = async (req, res) => {
     try {
-        let employee = await Employee.findOne({ rollNum: req.body.rollNum, name: req.body.employeeName });
-        if (employee) {
-            const validated = await bcrypt.compare(req.body.password, employee.password);
+        let student = await Student.findOne({ rollNum: req.body.rollNum, name: req.body.studentName });
+        if (student) {
+            const validated = await bcrypt.compare(req.body.password, student.password);
             if (validated) {
-                employee = await Employee.populate("school", "schoolName")
-                employee = await Employee.populate("sclassName", "sclassName")
-                employee.password = undefined;
-                employee.examResult = undefined;
-                employee.attendance = undefined;
-                res.send(employee);
+                student = await Student.populate("school", "schoolName")
+                student = await Student.populate("sclassName", "sclassName")
+                student.password = undefined;
+                student.examResult = undefined;
+                student.attendance = undefined;
+                res.send(student);
             } else {
                 res.send({ message: "Invalid password" });
             }
         } else {
-            res.send({ message: "employee not found" });
+            res.send({ message: "student not found" });
         }
     } catch (err) {
         res.status(500).json(err);
     }
 };
 
-const getEmployees = async (req, res) => {
+const getStudents = async (req, res) => {
     try {
-        let employees = await Employee.find({ school: req.params.id }).populate("sclassName", "sclassName");
-        if (employees.length > 0) {
-            let modifiedEmployees = employees.map((employee) => {
-                return { ...employee._doc, password: undefined };
+        let students = await Student.find({ school: req.params.id }).populate("sclassName", "sclassName");
+        if (students.length > 0) {
+            let modifiedStudents = students.map((student) => {
+                return { ...student._doc, password: undefined };
             });
-            res.send(modifiedEmployees);
+            res.send(modifiedStudents);
         } else {
-            res.send({ message: "No employees found" });
+            res.send({ message: "No students found" });
         }
     } catch (err) {
         res.status(500).json(err);
     }
 };
 
-const getEmployeeDetail = async (req, res) => {
+const getStudentDetail = async (req, res) => {
     try {
-        let employee = await Employee.findById(req.params.id)
+        let student = await Student.findById(req.params.id)
             .populate("school", "schoolName")
             .populate("sclassName", "sclassName")
             .populate("examResult.subName", "subName")
             .populate("attendance.subName", "subName sessions");
-        if (employee) {
-            employee.password = undefined;
-            res.send(employee);
+        if (student) {
+            student.password = undefined;
+            res.send(student);
         }
         else {
-            res.send({ message: "No employee found" });
+            res.send({ message: "No student found" });
         }
     } catch (err) {
         res.status(500).json(err);
     }
 }
 
-const deleteEmployee = async (req, res) => {
+const deleteStudent = async (req, res) => {
     try {
-        const result = await Employee.findByIdAndDelete(req.params.id)
+        const result = await Student.findByIdAndDelete(req.params.id)
         res.send(result)
     } catch (error) {
         res.status(500).json(error);
     }
 }
 
-const deleteEmployees = async (req, res) => {
+const deleteStudents = async (req, res) => {
     try {
-        const result = await Employee.deleteMany({ school: req.params.id })
+        const result = await Student.deleteMany({ school: req.params.id })
         if (result.deletedCount === 0) {
-            res.send({ message: "No employees found to delete" })
+            res.send({ message: "No students found to delete" })
         } else {
             res.send(result)
         }
@@ -113,11 +113,11 @@ const deleteEmployees = async (req, res) => {
     }
 }
 
-const deleteEmployeesByClass = async (req, res) => {
+const deleteStudentsByClass = async (req, res) => {
     try {
-        const result = await Employee.deleteMany({ sclassName: req.params.id })
+        const result = await Student.deleteMany({ sclassName: req.params.id })
         if (result.deletedCount === 0) {
-            res.send({ message: "No employees found to delete" })
+            res.send({ message: "No students found to delete" })
         } else {
             res.send(result)
         }
@@ -126,13 +126,13 @@ const deleteEmployeesByClass = async (req, res) => {
     }
 }
 
-const updateEmployee = async (req, res) => {
+const updateStudent = async (req, res) => {
     try {
         if (req.body.password) {
             const salt = await bcrypt.genSalt(10)
             res.body.password = await bcrypt.hash(res.body.password, salt)
         }
-        let result = await Employee.findByIdAndUpdate(req.params.id,
+        let result = await Student.findByIdAndUpdate(req.params.id,
             { $set: req.body },
             { new: true })
 
@@ -147,42 +147,42 @@ const updateExamResult = async (req, res) => {
     const { subName, marksObtained } = req.body;
 
     try {
-        const employee = await Employee.findById(req.params.id);
+        const student = await Student.findById(req.params.id);
 
-        if (!employee) {
-            return res.send({ message: 'employee not found' });
+        if (!student) {
+            return res.send({ message: 'student not found' });
         }
 
-        const existingResult = employee.examResult.find(
+        const existingResult = student.examResult.find(
             (result) => result.subName.toString() === subName
         );
 
         if (existingResult) {
             existingResult.marksObtained = marksObtained;
         } else {
-            employee.examResult.push({ subName, marksObtained });
+            student.examResult.push({ subName, marksObtained });
         }
 
-        const result = await employee.save();
+        const result = await student.save();
         return res.send(result);
     } catch (error) {
         res.status(500).json(error);
     }
 };
 
-const employeeAttendance = async (req, res) => {
+const studentAttendance = async (req, res) => {
     const { subName, status, date } = req.body;
 
     try {
-        const employee = await employee.findById(req.params.id);
+        const student = await student.findById(req.params.id);
 
-        if (!employee) {
-            return res.send({ message: 'employee not found' });
+        if (!student) {
+            return res.send({ message: 'student not found' });
         }
 
         const subject = await Subject.findById(subName);
 
-        const existingAttendance = employee.attendance.find(
+        const existingAttendance = student.attendance.find(
             (a) =>
                 a.date.toDateString() === new Date(date).toDateString() &&
                 a.subName.toString() === subName
@@ -191,8 +191,8 @@ const employeeAttendance = async (req, res) => {
         if (existingAttendance) {
             existingAttendance.status = status;
         } else {
-            // Check if the employee has already attended the maximum number of sessions
-            const attendedSessions = employee.attendance.filter(
+            // Check if the student has already attended the maximum number of sessions
+            const attendedSessions = student.attendance.filter(
                 (a) => a.subName.toString() === subName
             ).length;
 
@@ -200,21 +200,21 @@ const employeeAttendance = async (req, res) => {
                 return res.send({ message: 'Maximum attendance limit reached' });
             }
 
-            employee.attendance.push({ date, status, subName });
+            student.attendance.push({ date, status, subName });
         }
 
-        const result = await employee.save();
+        const result = await student.save();
         return res.send(result);
     } catch (error) {
         res.status(500).json(error);
     }
 };
 
-const clearAllEmployeesAttendanceBySubject = async (req, res) => {
+const clearAllStudentsAttendanceBySubject = async (req, res) => {
     const subName = req.params.id;
 
     try {
-        const result = await Employee.updateMany(
+        const result = await Student.updateMany(
             { 'attendance.subName': subName },
             { $pull: { attendance: { subName } } }
         );
@@ -224,11 +224,11 @@ const clearAllEmployeesAttendanceBySubject = async (req, res) => {
     }
 };
 
-const clearAllEmployeesAttendance = async (req, res) => {
+const clearAllStudentsAttendance = async (req, res) => {
     const schoolId = req.params.id
 
     try {
-        const result = await Employee.updateMany(
+        const result = await Student.updateMany(
             { school: schoolId },
             { $set: { attendance: [] } }
         );
@@ -239,13 +239,13 @@ const clearAllEmployeesAttendance = async (req, res) => {
     }
 };
 
-const removeEmployeeAttendanceBySubject = async (req, res) => {
-    const employeeId = req.params.id;
+const removeStudentAttendanceBySubject = async (req, res) => {
+    const studentId = req.params.id;
     const subName = req.body.subId
 
     try {
-        const result = await Employee.updateOne(
-            { _id: employeeId },
+        const result = await Student.updateOne(
+            { _id: studentId },
             { $pull: { attendance: { subName: subName } } }
         );
 
@@ -256,12 +256,12 @@ const removeEmployeeAttendanceBySubject = async (req, res) => {
 };
 
 
-const removeEmployeeAttendance = async (req, res) => {
-    const employeeId = req.params.id;
+const removeStudentAttendance = async (req, res) => {
+    const studentId = req.params.id;
 
     try {
-        const result = await Employee.updateOne(
-            { _id: employeeId },
+        const result = await Student.updateOne(
+            { _id: studentId },
             { $set: { attendance: [] } }
         );
 
@@ -273,19 +273,19 @@ const removeEmployeeAttendance = async (req, res) => {
 
 
 module.exports = {
-    employeeRegister,
-    employeeLogIn,
-    getEmployees: getEmployees,
-    getEmployeeDetail: getEmployeeDetail,
-    deleteEmployees: deleteEmployees,
-    deleteEmployee: deleteEmployee,
-    updateEmployee: updateEmployee,
-    employeeAttendance,
-    deleteEmployeesByClass: deleteEmployeesByClass,
+    studentRegister,
+    studentLogIn,
+    getStudents: getStudents,
+    getStudentDetail: getStudentDetail,
+    deleteStudents: deleteStudents,
+    deleteStudent: deleteStudent,
+    updateStudent: updateStudent,
+    studentAttendance,
+    deleteStudentsByClass: deleteStudentsByClass,
     updateExamResult,
 
-    clearAllEmployeesAttendanceBySubject: clearAllEmployeesAttendanceBySubject,
-    clearAllEmployeesAttendance: clearAllEmployeesAttendance,
-    removeEmployeeAttendanceBySubject: removeEmployeeAttendanceBySubject,
-    removeEmployeeAttendance: removeEmployeeAttendance,
+    clearAllStudentsAttendanceBySubject: clearAllStudentsAttendanceBySubject,
+    clearAllStudentsAttendance: clearAllStudentsAttendance,
+    removeStudentAttendanceBySubject: removeStudentAttendanceBySubject,
+    removeStudentAttendance: removeStudentAttendance,
 };

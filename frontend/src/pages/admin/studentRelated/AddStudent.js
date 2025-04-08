@@ -7,7 +7,7 @@ import { underControl } from '../../../redux/userRelated/userSlice';
 import { getAllSclasses } from '../../../redux/sclassRelated/sclassHandle';
 import { CircularProgress } from '@mui/material';
 
-const AddEmployee = ({ situation }) => {
+const AddStudent = ({ situation }) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const params = useParams()
@@ -23,7 +23,7 @@ const AddEmployee = ({ situation }) => {
     const [sclassName, setSclassName] = useState('')
 
     const adminID = currentUser._id
-    const role = "employee"
+    const role = "Student"
     const attendance = []
 
     useEffect(() => {
@@ -88,15 +88,15 @@ const AddEmployee = ({ situation }) => {
         <>
             <div className="register">
                 <form className="registerForm" onSubmit={submitHandler}>
-                    <span className="registerTitle">Add employee</span>
+                    <span className="registerTitle">Add Student</span>
                     <label>Name</label>
-                    <input className="registerInput" type="text" placeholder="Enter employee's name..."
+                    <input className="registerInput" type="text" placeholder="Enter student's name..."
                         value={name}
                         onChange={(event) => setName(event.target.value)}
                         autoComplete="name" required />
 
                     {
-                        situation === "employee" &&
+                        situation === "Student" &&
                         <>
                             <label>Class</label>
                             <select
@@ -114,13 +114,13 @@ const AddEmployee = ({ situation }) => {
                     }
 
                     <label>Roll Number</label>
-                    <input className="registerInput" type="number" placeholder="Enter employee's Roll Number..."
+                    <input className="registerInput" type="number" placeholder="Enter student's Roll Number..."
                         value={rollNum}
                         onChange={(event) => setRollNum(event.target.value)}
                         required />
 
                     <label>Password</label>
-                    <input className="registerInput" type="password" placeholder="Enter employee's password..."
+                    <input className="registerInput" type="password" placeholder="Enter student's password..."
                         value={password}
                         onChange={(event) => setPassword(event.target.value)}
                         autoComplete="new-password" required />
@@ -139,4 +139,4 @@ const AddEmployee = ({ situation }) => {
     )
 }
 
-export default AddEmployee
+export default AddStudent

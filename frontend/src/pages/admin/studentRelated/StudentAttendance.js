@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getUserDetails } from '../../../redux/userRelated/userHandle';
 import { getSubjectList } from '../../../redux/sclassRelated/sclassHandle';
-import { updateEmployeeFields } from '../../../redux/employeeRelated/employeeHandle';
+import { updateStudentFields } from '../../../redux/studentRelated/studentHandle';
 
 import {
     Box, InputLabel,
@@ -14,14 +14,14 @@ import {
 import { PurpleButton } from '../../../components/buttonStyles';
 import Popup from '../../../components/Popup';
 
-const EmployeeAttendance = ({ situation }) => {
+const StudentAttendance = ({ situation }) => {
     const dispatch = useDispatch();
     const { currentUser, userDetails, loading } = useSelector((state) => state.user);
     const { subjectsList } = useSelector((state) => state.sclass);
-    const { response, error, statestatus } = useSelector((state) => state.employee);
+    const { response, error, statestatus } = useSelector((state) => state.student);
     const params = useParams()
 
-    const [employeeID, setemployeeID] = useState("");
+    const [studentID, setStudentID] = useState("");
     const [subjectName, setSubjectName] = useState("");
     const [chosenSubName, setChosenSubName] = useState("");
     const [status, setStatus] = useState('');
@@ -32,21 +32,21 @@ const EmployeeAttendance = ({ situation }) => {
     const [loader, setLoader] = useState(false)
 
     useEffect(() => {
-        if (situation === "employee") {
-            setemployeeID(params.id);
+        if (situation === "Student") {
+            setStudentID(params.id);
             const stdID = params.id
-            dispatch(getUserDetails(stdID, "employee"));
+            dispatch(getUserDetails(stdID, "Student"));
         }
         else if (situation === "Subject") {
-            const { employeeID, subjectID } = params
-            setemployeeID(employeeID);
-            dispatch(getUserDetails(employeeID, "employee"));
+            const { studentID, subjectID } = params
+            setStudentID(studentID);
+            dispatch(getUserDetails(studentID, "Student"));
             setChosenSubName(subjectID);
         }
     }, [situation]);
 
     useEffect(() => {
-        if (userDetails && userDetails.sclassName && situation === "employee") {
+        if (userDetails && userDetails.sclassName && situation === "Student") {
             dispatch(getSubjectList(userDetails.sclassName._id, "ClassSubjects"));
         }
     }, [dispatch, userDetails]);
@@ -64,7 +64,7 @@ const EmployeeAttendance = ({ situation }) => {
     const submitHandler = (event) => {
         event.preventDefault()
         setLoader(true)
-        dispatch(updateEmployeeFields(employeeID, fields, "employeeAttendance"))
+        dispatch(updateStudentFields(studentID, fields, "StudentAttendance"))
     }
 
     useEffect(() => {
@@ -112,7 +112,7 @@ const EmployeeAttendance = ({ situation }) => {
                         >
                             <Stack spacing={1} sx={{ mb: 3 }}>
                                 <Typography variant="h4">
-                                    employee Name: {userDetails.name}
+                                    Student Name: {userDetails.name}
                                 </Typography>
                                 {currentUser.teachSubject &&
                                     <Typography variant="h4">
@@ -123,7 +123,7 @@ const EmployeeAttendance = ({ situation }) => {
                             <form onSubmit={submitHandler}>
                                 <Stack spacing={3}>
                                     {
-                                        situation === "employee" &&
+                                        situation === "Student" &&
                                         <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">Select Subject</InputLabel>
                                             <Select
@@ -194,4 +194,4 @@ const EmployeeAttendance = ({ situation }) => {
     )
 }
 
-export default EmployeeAttendance
+export default StudentAttendance

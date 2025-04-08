@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
-import { getClassemployees } from "../../redux/sclassRelated/sclassHandle";
+import { getClassStudents } from "../../redux/sclassRelated/sclassHandle";
 import { Paper, Box, Typography, ButtonGroup, Button, Popper, Grow, ClickAwayListener, MenuList, MenuItem } from '@mui/material';
 import { BlackButton, BlueButton} from "../../components/buttonStyles";
 import TableTemplate from "../../components/TableTemplate";
@@ -11,34 +11,34 @@ import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 const TeacherClassDetails = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch();
-    const { sclassemployees, loading, error, getresponse } = useSelector((state) => state.sclass);
+    const { sclassStudents, loading, error, getresponse } = useSelector((state) => state.sclass);
 
     const { currentUser } = useSelector((state) => state.user);
     const classID = currentUser.teachSclass?._id
     const subjectID = currentUser.teachSubject?._id
 
     useEffect(() => {
-        dispatch(getClassemployees(classID));
+        dispatch(getClassStudents(classID));
     }, [dispatch, classID])
 
     if (error) {
         console.log(error)
     }
 
-    const employeeColumns = [
+    const studentColumns = [
         { id: 'name', label: 'Name', minWidth: 170 },
         { id: 'rollNum', label: 'Roll Number', minWidth: 100 },
     ]
 
-    const employeeRows = sclassemployees.map((employee) => {
+    const studentRows = sclassStudents.map((student) => {
         return {
-            name: employee.name,
-            rollNum: employee.rollNum,
-            id: employee._id,
+            name: student.name,
+            rollNum: student.rollNum,
+            id: student._id,
         };
     })
 
-    const EmployeesButtonHaver = ({ row }) => {
+    const StudentsButtonHaver = ({ row }) => {
         const options = ['Take Attendance', 'Provide Marks'];
 
         const [open, setOpen] = React.useState(false);
@@ -55,10 +55,10 @@ const TeacherClassDetails = () => {
         };
 
         const handleAttendance = () => {
-            navigate(`/Teacher/class/employee/attendance/${row.id}/${subjectID}`)
+            navigate(`/Teacher/class/student/attendance/${row.id}/${subjectID}`)
         }
         const handleMarks = () => {
-            navigate(`/Teacher/class/employee/marks/${row.id}/${subjectID}`)
+            navigate(`/Teacher/class/student/marks/${row.id}/${subjectID}`)
         };
 
         const handleMenuItemClick = (event, index) => {
@@ -82,7 +82,7 @@ const TeacherClassDetails = () => {
                 <BlueButton
                     variant="contained"
                     onClick={() =>
-                        navigate("/Teacher/class/employee/" + row.id)
+                        navigate("/Teacher/class/student/" + row.id)
                     }
                 >
                     View
@@ -155,17 +155,17 @@ const TeacherClassDetails = () => {
                     {getresponse ? (
                         <>
                             <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
-                                No employees Found
+                                No Students Found
                             </Box>
                         </>
                     ) : (
                         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                             <Typography variant="h5" gutterBottom>
-                                employees List:
+                                Students List:
                             </Typography>
 
-                            {Array.isArray(sclassemployees) && sclassemployees.length > 0 &&
-                                <TableTemplate buttonHaver={EmployeesButtonHaver} columns={employeeColumns} rows={employeeRows} />
+                            {Array.isArray(sclassStudents) && sclassStudents.length > 0 &&
+                                <TableTemplate buttonHaver={StudentsButtonHaver} columns={studentColumns} rows={studentRows} />
                             }
                         </Paper>
                     )}

@@ -8,7 +8,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { KeyboardArrowUp, KeyboardArrowDown, Delete as DeleteIcon } from '@mui/icons-material';
-import { removeStuff, updateEmployeeFields } from '../../../redux/employeeRelated/employeeHandle';
+import { removeStuff, updateStudentFields } from '../../../redux/studentRelated/studentHandle';
 import { calculateOverallAttendancePercentage, calculateSubjectAttendancePercentage, groupAttendanceBySubject } from '../../../components/attendanceCalculator';
 import CustomBarChart from '../../../components/CustomBarChart'
 import CustomPieChart from '../../../components/CustomPieChart'
@@ -20,7 +20,7 @@ import TableChartIcon from '@mui/icons-material/TableChart';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import Popup from '../../../components/Popup';
 
-const Viewemployee = () => {
+const ViewStudent = () => {
     const [showTab, setShowTab] = useState(false);
 
     const navigate = useNavigate()
@@ -28,12 +28,12 @@ const Viewemployee = () => {
     const dispatch = useDispatch()
     const { userDetails, response, loading, error } = useSelector((state) => state.user);
 
-    const employeeID = params.id
-    const address = "employee"
+    const studentID = params.id
+    const address = "Student"
 
     useEffect(() => {
-        dispatch(getUserDetails(employeeID, address));
-    }, [dispatch, employeeID])
+        dispatch(getUserDetails(studentID, address));
+    }, [dispatch, studentID])
 
     useEffect(() => {
         if (userDetails && userDetails.sclassName && userDetails.sclassName._id !== undefined) {
@@ -48,7 +48,7 @@ const Viewemployee = () => {
     const [rollNum, setRollNum] = useState('');
     const [password, setPassword] = useState('');
     const [sclassName, setSclassName] = useState('');
-    const [employeeSchool, setemployeeSchool] = useState('');
+    const [studentSchool, setStudentSchool] = useState('');
     const [subjectMarks, setSubjectMarks] = useState('');
     const [subjectAttendance, setSubjectAttendance] = useState([]);
 
@@ -84,7 +84,7 @@ const Viewemployee = () => {
             setName(userDetails.name || '');
             setRollNum(userDetails.rollNum || '');
             setSclassName(userDetails.sclassName || '');
-            setemployeeSchool(userDetails.school || '');
+            setStudentSchool(userDetails.school || '');
             setSubjectMarks(userDetails.examResult || '');
             setSubjectAttendance(userDetails.attendance || []);
         }
@@ -92,9 +92,9 @@ const Viewemployee = () => {
 
     const submitHandler = (event) => {
         event.preventDefault()
-        dispatch(updateUser(fields, employeeID, address))
+        dispatch(updateUser(fields, studentID, address))
             .then(() => {
-                dispatch(getUserDetails(employeeID, address));
+                dispatch(getUserDetails(studentID, address));
             })
             .catch((error) => {
                 console.error(error)
@@ -105,7 +105,7 @@ const Viewemployee = () => {
         setMessage("Sorry the delete function has been disabled for now.")
         setShowPopup(true)
 
-        // dispatch(deleteUser(employeeID, address))
+        // dispatch(deleteUser(studentID, address))
         //     .then(() => {
         //         navigate(-1)
         //     })
@@ -114,14 +114,14 @@ const Viewemployee = () => {
     const removeHandler = (id, deladdress) => {
         dispatch(removeStuff(id, deladdress))
             .then(() => {
-                dispatch(getUserDetails(employeeID, address));
+                dispatch(getUserDetails(studentID, address));
             })
     }
 
     const removeSubAttendance = (subId) => {
-        dispatch(updateEmployeeFields(employeeID, { subId }, "RemoveemployeeSubAtten"))
+        dispatch(updateStudentFields(studentID, { subId }, "RemoveStudentSubAtten"))
             .then(() => {
-                dispatch(getUserDetails(employeeID, address));
+                dispatch(getUserDetails(studentID, address));
             })
     }
 
@@ -143,7 +143,7 @@ const Viewemployee = () => {
         };
     });
 
-    const employeeAttendanceSection = () => {
+    const StudentAttendanceSection = () => {
         const renderTableSection = () => {
             return (
                 <>
@@ -176,7 +176,7 @@ const Viewemployee = () => {
                                                 <DeleteIcon color="error" />
                                             </IconButton>
                                             <Button variant="contained" sx={styles.attendanceButton}
-                                                onClick={() => navigate(`/Admin/subject/employee/attendance/${employeeID}/${subId}`)}>
+                                                onClick={() => navigate(`/Admin/subject/student/attendance/${studentID}/${subId}`)}>
                                                 Change
                                             </Button>
                                         </StyledTableCell>
@@ -222,8 +222,8 @@ const Viewemployee = () => {
                     <div>
                         Overall Attendance Percentage: {overallAttendancePercentage.toFixed(2)}%
                     </div>
-                    <Button variant="contained" color="error" startIcon={<DeleteIcon />} onClick={() => removeHandler(employeeID, "RemoveemployeeAtten")}>Delete All</Button>
-                    <Button variant="contained" sx={styles.styledButton} onClick={() => navigate("/Admin/employees/employee/attendance/" + employeeID)}>
+                    <Button variant="contained" color="error" startIcon={<DeleteIcon />} onClick={() => removeHandler(studentID, "RemoveStudentAtten")}>Delete All</Button>
+                    <Button variant="contained" sx={styles.styledButton} onClick={() => navigate("/Admin/students/student/attendance/" + studentID)}>
                         Add Attendance
                     </Button>
                 </>
@@ -260,7 +260,7 @@ const Viewemployee = () => {
                         </Paper>
                     </>
                     :
-                    <Button variant="contained" sx={styles.styledButton} onClick={() => navigate("/Admin/employees/employee/attendance/" + employeeID)}>
+                    <Button variant="contained" sx={styles.styledButton} onClick={() => navigate("/Admin/students/student/attendance/" + studentID)}>
                         Add Attendance
                     </Button>
                 }
@@ -268,7 +268,7 @@ const Viewemployee = () => {
         )
     }
 
-    const employeeMarksSection = () => {
+    const StudentMarksSection = () => {
         const renderTableSection = () => {
             return (
                 <>
@@ -294,7 +294,7 @@ const Viewemployee = () => {
                             })}
                         </TableBody>
                     </Table>
-                    <Button variant="contained" sx={styles.styledButton} onClick={() => navigate("/Admin/employees/employee/marks/" + employeeID)}>
+                    <Button variant="contained" sx={styles.styledButton} onClick={() => navigate("/Admin/students/student/marks/" + studentID)}>
                         Add Marks
                     </Button>
                 </>
@@ -331,7 +331,7 @@ const Viewemployee = () => {
                         </Paper>
                     </>
                     :
-                    <Button variant="contained" sx={styles.styledButton} onClick={() => navigate("/Admin/employees/employee/marks/" + employeeID)}>
+                    <Button variant="contained" sx={styles.styledButton} onClick={() => navigate("/Admin/students/student/marks/" + studentID)}>
                         Add Marks
                     </Button>
                 }
@@ -339,7 +339,7 @@ const Viewemployee = () => {
         )
     }
 
-    const employeeDetailsSection = () => {
+    const StudentDetailsSection = () => {
         return (
             <div>
                 Name: {userDetails.name}
@@ -348,7 +348,7 @@ const Viewemployee = () => {
                 <br />
                 Class: {sclassName.sclassName}
                 <br />
-                School: {employeeSchool.schoolName}
+                School: {studentSchool.schoolName}
                 {
                     subjectAttendance && Array.isArray(subjectAttendance) && subjectAttendance.length > 0 && (
                         <CustomPieChart data={chartData} />
@@ -364,7 +364,7 @@ const Viewemployee = () => {
                             ? <KeyboardArrowUp />
                             : <KeyboardArrowDown />
                     }
-                    Edit employee
+                    Edit Student
                 </Button>
                 <Collapse in={showTab} timeout="auto" unmountOnExit>
                     <div className="register">
@@ -416,13 +416,13 @@ const Viewemployee = () => {
                             </Box>
                             <Container sx={{ marginTop: "3rem", marginBottom: "4rem" }}>
                                 <TabPanel value="1">
-                                    <employeeDetailsSection />
+                                    <StudentDetailsSection />
                                 </TabPanel>
                                 <TabPanel value="2">
-                                    <employeeAttendanceSection />
+                                    <StudentAttendanceSection />
                                 </TabPanel>
                                 <TabPanel value="3">
-                                    <employeeMarksSection />
+                                    <StudentMarksSection />
                                 </TabPanel>
                             </Container>
                         </TabContext>
@@ -435,7 +435,7 @@ const Viewemployee = () => {
     )
 }
 
-export default Viewemployee
+export default ViewStudent
 
 const styles = {
     attendanceButton: {

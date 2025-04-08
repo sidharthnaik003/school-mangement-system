@@ -3,14 +3,14 @@ import styled from 'styled-components';
 import { Card, CardContent, Typography, Grid, Box, Avatar, Container, Paper } from '@mui/material';
 import { useSelector } from 'react-redux';
 
-const EmployeeProfile = () => {
+const StudentProfile = () => {
   const { currentUser, response, error } = useSelector((state) => state.user);
 
   if (response) { console.log(response) }
   else if (error) { console.log(error) }
 
   const sclassName = currentUser.sclassName
-  const employeeSchool = currentUser.school
+  const studentSchool = currentUser.school
 
   return (
     <>
@@ -19,7 +19,7 @@ const EmployeeProfile = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Box display="flex" justifyContent="center">
-                <Avatar alt="employee Avatar" sx={{ width: 150, height: 150 }}>
+                <Avatar alt="Student Avatar" sx={{ width: 150, height: 150 }}>
                   {String(currentUser.name).charAt(0)}
                 </Avatar>
               </Box>
@@ -34,7 +34,7 @@ const EmployeeProfile = () => {
             <Grid item xs={12}>
               <Box display="flex" justifyContent="center">
                 <Typography variant="subtitle1" component="p" textAlign="center">
-                  employee Roll No: {currentUser.rollNum}
+                  Student Roll No: {currentUser.rollNum}
                 </Typography>
               </Box>
             </Grid>
@@ -48,7 +48,7 @@ const EmployeeProfile = () => {
             <Grid item xs={12}>
               <Box display="flex" justifyContent="center">
                 <Typography variant="subtitle1" component="p" textAlign="center">
-                  School: {employeeSchool.schoolName}
+                  School: {studentSchool.schoolName}
                 </Typography>
               </Box>
             </Grid>
@@ -98,7 +98,7 @@ const EmployeeProfile = () => {
   )
 }
 
-export default EmployeeProfile
+export default StudentProfile
 
 const StyledPaper = styled(Paper)`
   padding: 20px;
