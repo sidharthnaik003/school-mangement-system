@@ -1,6 +1,6 @@
 const Subject = require('../models/subjectSchema.js');
 const Teacher = require('../models/teacherSchema.js');
-const student = require('../models/studentSchema.js');
+const Student = require('../models/studentSchema.js');
 
 const subjectCreate = async (req, res) => {
     try {
@@ -99,13 +99,13 @@ const deleteSubject = async (req, res) => {
         );
 
         // Remove the objects containing the deleted subject from students' examResult array
-        await student.updateMany(
+        await Student.updateMany(
             {},
             { $pull: { examResult: { subName: deletedSubject._id } } }
         );
 
         // Remove the objects containing the deleted subject from students' attendance array
-        await student.updateMany(
+        await Student.updateMany(
             {},
             { $pull: { attendance: { subName: deletedSubject._id } } }
         );
@@ -127,7 +127,7 @@ const deleteSubjects = async (req, res) => {
         );
 
         // Set examResult and attendance to null in all students
-        await student.updateMany(
+        await Student.updateMany(
             {},
             { $set: { examResult: null, attendance: null } }
         );
@@ -149,7 +149,7 @@ const deleteSubjectsByClass = async (req, res) => {
         );
 
         // Set examResult and attendance to null in all students
-        await student.updateMany(
+        await Student.updateMany(
             {},
             { $set: { examResult: null, attendance: null } }
         );

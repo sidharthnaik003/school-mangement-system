@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const Student = require('../models/studentSchema.js');
 const Subject = require('../models/subjectSchema.js');
 
@@ -39,8 +39,8 @@ const studentLogIn = async (req, res) => {
         if (student) {
             const validated = await bcrypt.compare(req.body.password, student.password);
             if (validated) {
-                student = await Student.populate("school", "schoolName")
-                student = await Student.populate("sclassName", "sclassName")
+                student = await student.populate("school", "schoolName")
+                student = await student.populate("sclassName", "sclassName")
                 student.password = undefined;
                 student.examResult = undefined;
                 student.attendance = undefined;
@@ -49,7 +49,7 @@ const studentLogIn = async (req, res) => {
                 res.send({ message: "Invalid password" });
             }
         } else {
-            res.send({ message: "student not found" });
+            res.send({ message: "Student not found" });
         }
     } catch (err) {
         res.status(500).json(err);
@@ -96,7 +96,7 @@ const deleteStudent = async (req, res) => {
         const result = await Student.findByIdAndDelete(req.params.id)
         res.send(result)
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).json(err);
     }
 }
 
@@ -109,7 +109,7 @@ const deleteStudents = async (req, res) => {
             res.send(result)
         }
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).json(err);
     }
 }
 
@@ -122,7 +122,7 @@ const deleteStudentsByClass = async (req, res) => {
             res.send(result)
         }
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).json(err);
     }
 }
 
@@ -150,7 +150,7 @@ const updateExamResult = async (req, res) => {
         const student = await Student.findById(req.params.id);
 
         if (!student) {
-            return res.send({ message: 'student not found' });
+            return res.send({ message: 'Student not found' });
         }
 
         const existingResult = student.examResult.find(
@@ -174,10 +174,10 @@ const studentAttendance = async (req, res) => {
     const { subName, status, date } = req.body;
 
     try {
-        const student = await student.findById(req.params.id);
+        const student = await Student.findById(req.params.id);
 
         if (!student) {
-            return res.send({ message: 'student not found' });
+            return res.send({ message: 'Student not found' });
         }
 
         const subject = await Subject.findById(subName);
@@ -275,17 +275,17 @@ const removeStudentAttendance = async (req, res) => {
 module.exports = {
     studentRegister,
     studentLogIn,
-    getStudents: getStudents,
-    getStudentDetail: getStudentDetail,
-    deleteStudents: deleteStudents,
-    deleteStudent: deleteStudent,
-    updateStudent: updateStudent,
+    getStudents,
+    getStudentDetail,
+    deleteStudents,
+    deleteStudent,
+    updateStudent,
     studentAttendance,
-    deleteStudentsByClass: deleteStudentsByClass,
+    deleteStudentsByClass,
     updateExamResult,
 
-    clearAllStudentsAttendanceBySubject: clearAllStudentsAttendanceBySubject,
-    clearAllStudentsAttendance: clearAllStudentsAttendance,
-    removeStudentAttendanceBySubject: removeStudentAttendanceBySubject,
-    removeStudentAttendance: removeStudentAttendance,
+    clearAllStudentsAttendanceBySubject,
+    clearAllStudentsAttendance,
+    removeStudentAttendanceBySubject,
+    removeStudentAttendance,
 };

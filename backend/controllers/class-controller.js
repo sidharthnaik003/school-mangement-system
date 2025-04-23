@@ -1,5 +1,5 @@
 const Sclass = require('../models/sclassSchema.js');
-const student = require('../models/studentSchema.js');
+const Student = require('../models/studentSchema.js');
 const Subject = require('../models/subjectSchema.js');
 const Teacher = require('../models/teacherSchema.js');
 
@@ -55,14 +55,14 @@ const getSclassDetail = async (req, res) => {
     }
 }
 
-const getSclassstudents = async (req, res) => {
+const getSclassStudents = async (req, res) => {
     try {
-        let students = await student.find({ sclassName: req.params.id })
+        let students = await Student.find({ sclassName: req.params.id })
         if (students.length > 0) {
-            let modifiedstudents = students.map((student) => {
+            let modifiedStudents = students.map((student) => {
                 return { ...student._doc, password: undefined };
             });
-            res.send(modifiedstudents);
+            res.send(modifiedStudents);
         } else {
             res.send({ message: "No students found" });
         }
@@ -77,7 +77,7 @@ const deleteSclass = async (req, res) => {
         if (!deletedClass) {
             return res.send({ message: "Class not found" });
         }
-        const deletedstudents = await student.deleteMany({ sclassName: req.params.id });
+        const deletedStudents = await Student.deleteMany({ sclassName: req.params.id });
         const deletedSubjects = await Subject.deleteMany({ sclassName: req.params.id });
         const deletedTeachers = await Teacher.deleteMany({ teachSclass: req.params.id });
         res.send(deletedClass);
@@ -92,7 +92,7 @@ const deleteSclasses = async (req, res) => {
         if (deletedClasses.deletedCount === 0) {
             return res.send({ message: "No classes found to delete" });
         }
-        const deletedstudents = await student.deleteMany({ school: req.params.id });
+        const deletedStudents = await Student.deleteMany({ school: req.params.id });
         const deletedSubjects = await Subject.deleteMany({ school: req.params.id });
         const deletedTeachers = await Teacher.deleteMany({ school: req.params.id });
         res.send(deletedClasses);
@@ -102,4 +102,4 @@ const deleteSclasses = async (req, res) => {
 }
 
 
-module.exports = { sclassCreate, sclassList, deleteSclass, deleteSclasses, getSclassDetail, getSclassstudents };
+module.exports = { sclassCreate, sclassList, deleteSclass, deleteSclasses, getSclassDetail, getSclassStudents };

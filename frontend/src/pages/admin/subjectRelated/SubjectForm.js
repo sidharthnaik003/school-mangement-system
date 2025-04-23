@@ -116,6 +116,17 @@ const SubjectForm = () => {
                                 required
                             />
                         </Grid>
+                        <Grid item xs={6}>
+                            <TextField
+                                fullWidth
+                                label="Teacher Name"
+                                variant="outlined"
+                                value={subject.subName}
+                                onChange={handleSubjectNameChange(index)}
+                                sx={styles.inputField}
+                                required
+                            />
+                        </Grid>
                         <Grid item xs={4}>
                             <TextField
                                 fullWidth

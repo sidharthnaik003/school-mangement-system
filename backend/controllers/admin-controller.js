@@ -1,11 +1,11 @@
-// const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const Admin = require('../models/adminSchema.js');
-// const Sclass = require('../models/sclassSchema.js');
-// const student = require('../models/studentSchema.js');
-// const Teacher = require('../models/teacherSchema.js');
-// const Subject = require('../models/subjectSchema.js');
-// const Notice = require('../models/noticeSchema.js');
-// const Complain = require('../models/complainSchema.js');
+const Sclass = require('../models/sclassSchema.js');
+const Student = require('../models/studentSchema.js');
+const Teacher = require('../models/teacherSchema.js');
+const Subject = require('../models/subjectSchema.js');
+const Notice = require('../models/noticeSchema.js');
+const Complain = require('../models/complainSchema.js');
 
 // const adminRegister = async (req, res) => {
 //     try {
@@ -118,7 +118,7 @@ const getAdminDetail = async (req, res) => {
 //         const result = await Admin.findByIdAndDelete(req.params.id)
 
 //         await Sclass.deleteMany({ school: req.params.id });
-//         await student.deleteMany({ school: req.params.id });
+//         await Student.deleteMany({ school: req.params.id });
 //         await Teacher.deleteMany({ school: req.params.id });
 //         await Subject.deleteMany({ school: req.params.id });
 //         await Notice.deleteMany({ school: req.params.id });
