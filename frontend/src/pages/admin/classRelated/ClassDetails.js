@@ -234,15 +234,21 @@ const ClassDetails = () => {
                         variant="contained"
                         onClick={() => navigate("/Admin/class/addstudents/" + classID)}
                     >
-                        Add Teacher
+                        Add Student
                     </GreenButton>
                 }
+<br />
+<br />
 
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
-                                <GreenButton variant="contained" onClick={() => navigate("/Admin/teachers/chooseclass")}>
-                                    Add Teacher
-                                </GreenButton>
-                            </Box>
+{response &&
+                    <GreenButton variant="contained" onClick={() => navigate("/Admin/teachers/chooseclass")}>
+                                        Add Teacher
+                                    </GreenButton>
+                }
+
+<br />  
+<br />
+
                 {response &&
                     <GreenButton
                         variant="contained"
